@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gita-emotion-atlas</title>
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&amp;f[]=zodiak@400,700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="https://d2z0o16i8xm8ak.cloudfront.net/web/direct-files/063e70b487b1f0983acc0ed523972cc7/70385e15-38c6-4f1a-823b-687f79ee4cef/2185a91b.html?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9kMnowbzE2aTh4bThhay5jbG91ZGZyb250Lm5ldC93ZWIvZGlyZWN0LWZpbGVzLzA2M2U3MGI0ODdiMWYwOTgzYWNjMGVkNTIzOTcyY2M3LzcwMzg1ZTE1LTM4YzYtNGYxYS04MjNiLTY4N2Y3OWVlNGNlZi8yMTg1YTkxYi5odG1sPyoiLCJDb25kaXRpb24iOnsiRGF0ZUxlc3NUaGFuIjp7IkFXUzpFcG9jaFRpbWUiOjE3Nzk4ODQ3OTB9fX1dfQ__&amp;Signature=L45-M98M8cHiMur34G8ydmoj5I8P3kwoNZKAXWzdTpD87rH-qaiLtQRVlG-TwsjUprllurjgbmkAer8~0hb4ofg1FOqdJ9opEKEFakNwwAO9ZCIEC-Po30SeBPEQ8hZEA2fc~ySh9ye3JI15MljlSqPvhsdqL8a6zu8Azwv2nXM9YLpZELXXTzA5dDLha4fsVWh79FNjBrXmPcqUI2LoTSEYzpejw-ILtjL2V7Idn72oQCK~QSsxeIv5GPS9~AVEKIenPkyCyY2IoSiDiVaRfL5-074RdrSWG2jFFzx0nWrQL9Ep5YE4cytRhnoHuxOrEHHkE0b2NrBo1kJI-ZapNQ__&amp;Key-Pair-Id=K1BF7XGXAIMYNX&amp;rnd=1779280051759&amp;utm_source=perplexity#main">Skip to content</a>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c1.9 2.2 2.8 4.1 2.8 5.8A2.8 2.8 0 0 1 12 11.6a2.8 2.8 0 0 1-2.8-2.8C9.2 7.1 10.1 5.2 12 3Z" fill="currentColor" opacity=".95"></path><path d="M6 15c1.6-2.4 3.6-3.6 6-3.6s4.4 1.2 6 3.6"></path><path d="M8 17.5c1 1.8 2.4 2.7 4 2.7s3-1 4-2.7"></path></svg>
+        </div>
+        <div class="brand-copy">
+          <h1>Gita Emotion Atlas</h1>
+          <p>Emotion-tagged Bhagavad Gita study interface using a separate JSON dataset rendered with JavaScript.</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn" data-theme-toggle="" aria-label="Switch theme">🌙</button>
+        <button class="btn btn-primary" id="downloadJson">Download JSON</button>
+      </div>
+    </header>
+
+    <section class="surface hero">
+      <h2>JSON-powered Gita verses by emotion.</h2>
+      <p>This version separates data, styling, and logic into independent files. The page reads the JSON file, renders verse cards in the browser, and lets you search, sort, and filter by emotional themes.</p>
+    </section>
+
+    <section class="surface stats" aria-label="Overview statistics">
+      <div class="stat"><strong id="totalVerses">0</strong><span>Total JSON entries</span></div>
+      <div class="stat"><strong id="totalEmotions">0</strong><span>Emotion groups</span></div>
+      <div class="stat"><strong id="visibleCount">0</strong><span>Visible verses</span></div>
+      <div class="stat"><strong>Both</strong><span>Sanskrit + English</span></div>
+    </section>
+
+    <div class="layout">
+      <aside class="surface">
+        <div class="panel-title">Emotion groups</div>
+        <div id="emotionList" class="emotion-list" role="navigation" aria-label="Emotion filters"></div>
+        <p class="note">This sample dataset contains representative entries. You can extend the JSON structure to all 700 verses.</p>
+      </aside>
+
+      <main id="main">
+        <section class="surface panel">
+          <div class="toolbar">
+            <input id="searchBox" class="field" type="search" placeholder="Search chapter, verse, Sanskrit, English, or emotion" aria-label="Search verses">
+            <select id="sortSelect" aria-label="Sort verses">
+              <option value="canonical">Canonical order</option>
+              <option value="emotion">Emotion name</option>
+              <option value="chapter">Chapter and verse</option>
+            </select>
+            <div id="activeChips" class="chips"></div>
+          </div>
+          <div class="section-head">
+            <div>
+              <h3 id="sectionTitle">All verses</h3>
+              <p id="sectionSubtitle">Browse the emotion-tagged verse collection.</p>
+            </div>
+          </div>
+          <div id="results" class="grid"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+  
+<script>const state={verses:[],selected:new Set(),search:'',sort:'canonical'};
+const refs={emotionList:document.getElementById('emotionList'),results:document.getElementById('results'),chips:document.getElementById('activeChips'),searchBox:document.getElementById('searchBox'),sortSelect:document.getElementById('sortSelect'),sectionTitle:document.getElementById('sectionTitle'),sectionSubtitle:document.getElementById('sectionSubtitle'),totalVerses:document.getElementById('totalVerses'),totalEmotions:document.getElementById('totalEmotions'),visibleCount:document.getElementById('visibleCount')};
+async function loadData(){const response=await fetch('./gita-data.json');state.verses=await response.json();refs.totalVerses.textContent=state.verses.length;const emotions=getEmotionCounts();refs.totalEmotions.textContent=Object.keys(emotions).length;render();}
+function getEmotionCounts(){const counts={};state.verses.forEach(v=>v.emotions.forEach(e=>counts[e]=(counts[e]||0)+1));return counts;}
+function getSortedEmotions(){const counts=getEmotionCounts();return Object.keys(counts).sort((a,b)=>counts[b]-counts[a]||a.localeCompare(b)).map(name=>({name,count:counts[name]}));}
+function filterVerses(){let data=[...state.verses];if(state.selected.size)data=data.filter(v=>v.emotions.some(e=>state.selected.has(e)));const q=state.search.trim().toLowerCase();if(q)data=data.filter(v=>[v.ref,v.key,v.sanskrit,v.english,v.emotions.join(' ')].join(' ').toLowerCase().includes(q));if(state.sort==='emotion')data.sort((a,b)=>a.emotions[0].localeCompare(b.emotions[0])||a.chapter-b.chapter||a.verse-b.verse);else if(state.sort==='chapter')data.sort((a,b)=>a.chapter-b.chapter||a.verse-b.verse);return data;}
+function renderEmotions(){refs.emotionList.innerHTML=getSortedEmotions().map(({name,count})=>`<button class="emotion-btn ${state.selected.has(name)?'active':''}" data-emotion="${name}" aria-pressed="${state.selected.has(name)}"><span>${name}</span><small>${count}</small></button>`).join('');refs.emotionList.querySelectorAll('[data-emotion]').forEach(btn=>btn.addEventListener('click',()=>{const emotion=btn.dataset.emotion;state.selected.has(emotion)?state.selected.delete(emotion):state.selected.add(emotion);render();}));}
+function renderChips(){refs.chips.innerHTML=[...state.selected].map(em=>`<button class="chip" data-remove="${em}">${em} ✕</button>`).join('');refs.chips.querySelectorAll('[data-remove]').forEach(btn=>btn.addEventListener('click',()=>{state.selected.delete(btn.dataset.remove);render();}));}
+function renderResults(){const data=filterVerses();refs.visibleCount.textContent=data.length;refs.sectionTitle.textContent=state.selected.size?[...state.selected].join(', '):'All verses';refs.sectionSubtitle.textContent=state.search?`Search results for “${state.search}”.`:'Browse the emotion-tagged verse collection.';if(!data.length){refs.results.innerHTML='<div class="empty">No verses matched this filter. Try a different emotion or broader search term.</div>';return;}refs.results.innerHTML=data.map(v=>`<article class="surface verse-card"><div class="verse-meta"><div><div class="verse-ref">${v.ref}</div><div class="emotion-tags">${v.emotions.join(' · ')}</div></div><span class="badge">${v.key}</span></div><div class="sanskrit">${v.sanskrit}</div><div class="english">${v.english}</div></article>`).join('');}
+function render(){renderEmotions();renderChips();renderResults();}
+refs.searchBox.addEventListener('input',e=>{state.search=e.target.value;renderResults();});refs.sortSelect.addEventListener('change',e=>{state.sort=e.target.value;renderResults();});
+(function(){const t=document.querySelector('[data-theme-toggle]');const r=document.documentElement;let d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';r.setAttribute('data-theme',d);t.textContent=d==='dark'?'☀️':'🌙';t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);t.textContent=d==='dark'?'☀️':'🌙';t.setAttribute('aria-label','Switch to '+(d==='dark'?'light':'dark')+' mode');});})();
+document.getElementById('downloadJson').addEventListener('click',()=>{fetch('./gita-data.json').then(r=>r.blob()).then(blob=>{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='gita-data.json';a.click();URL.revokeObjectURL(a.href);});});
+loadData();
+
+</script>
+<script type="module">
+  import data from './gita-data.json' with { type: 'json' };
+  console.log(data);
+</script>
+
+</body></html>
